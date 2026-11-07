@@ -51,7 +51,7 @@ upstream merges stay easy.
 ## Install
 
 ```yaml
-- git clone https://github.com/somos-criptonautas/discourse-power-tools-nautas.git jtech-tools
+- git clone https://github.com/criptonautas/discourse-power-tools-nautas.git jtech-tools
 ```
 
 ## Sync with upstream

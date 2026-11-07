@@ -28,7 +28,7 @@ El plugin de Discourse detrás de [Criptonautas](https://criptonautas.co): herra
 - **[Ajustes del traductor](docs/features/translator-tweaks.md).** Un proxy para las peticiones a Google del plugin Translator.
 - **[Embeds de Ghost](docs/features/ghost-embeds.md).** Las entradas importadas de Ghost conservan sus imágenes, avisos y tarjetas de enlace.
 
-También funciona junto a [discourse-category-lockdown-nautas](https://github.com/somos-criptonautas/discourse-category-lockdown-nautas): las respuestas privadas siguen visibles para su audiencia dentro de temas bloqueados.
+También funciona junto a [discourse-category-lockdown-nautas](https://github.com/criptonautas/discourse-category-lockdown-nautas): las respuestas privadas siguen visibles para su audiencia dentro de temas bloqueados.
 
 La interfaz está disponible en inglés y español.
 
@@ -42,7 +42,7 @@ hooks:
     - exec:
         cd: $home/plugins
         cmd:
-          - git clone https://github.com/somos-criptonautas/discourse-power-tools-nautas.git jtech-tools
+          - git clone https://github.com/criptonautas/discourse-power-tools-nautas.git jtech-tools
 ```
 
 ```bash

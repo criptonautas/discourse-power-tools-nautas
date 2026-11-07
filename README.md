@@ -28,7 +28,7 @@ The Discourse plugin behind [Criptonautas](https://criptonautas.co): moderator t
 - **[Translator tweaks](docs/features/translator-tweaks.md).** A proxy for the Translator plugin's Google requests.
 - **[Ghost embeds](docs/features/ghost-embeds.md).** Blog posts imported from Ghost keep their images, callouts and link cards.
 
-It also works alongside [discourse-category-lockdown-nautas](https://github.com/somos-criptonautas/discourse-category-lockdown-nautas): private replies stay visible to their audience inside lockdown topics.
+It also works alongside [discourse-category-lockdown-nautas](https://github.com/criptonautas/discourse-category-lockdown-nautas): private replies stay visible to their audience inside lockdown topics.
 
 The interface is available in English and Spanish.
 
@@ -42,7 +42,7 @@ hooks:
     - exec:
         cd: $home/plugins
         cmd:
-          - git clone https://github.com/somos-criptonautas/discourse-power-tools-nautas.git jtech-tools
+          - git clone https://github.com/criptonautas/discourse-power-tools-nautas.git jtech-tools
 ```
 
 ```bash

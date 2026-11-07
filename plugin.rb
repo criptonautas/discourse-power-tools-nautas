@@ -4,7 +4,7 @@
 # about: Power Tools Nautas — Criptonautas' Discourse power tools: moderator tools, Mini-mod, Dislike, the Disteleplus Telegram bridge, REQ-PM, listing format for sale threads, mod elections, Dumbcourse, smart search, desktop pop-ups, Another SMTP, translator tweaks and Ghost embeds.
 # version: 0.5.0
 # authors: TripleU, Shalom_Karr, Ars18 — Forked by Criptonautas
-# url: https://github.com/somos-criptonautas/discourse-power-tools-nautas
+# url: https://github.com/criptonautas/discourse-power-tools-nautas
 # required_version: 3.0.0
 
 # Smart-search synonym backend — rwordnet ships the WordNet lexical DB
