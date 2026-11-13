@@ -33,6 +33,42 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
     end
   end
 
+  # Reply's outline goes round its word on a computer; on a phone, with no
+  # word, it was the one boxed icon in each post's row
+  it "draws a post's Reply as an icon like the rest on a phone", mobile: true do
+    sign_in(admin)
+    resize_window(width: 390, height: 844) do
+      visit(topic.relative_url)
+      reply = "#post_1 nav.post-controls .post-action-menu__reply"
+      expect(page).to have_css(reply)
+      border, size, neighbour = page.evaluate_script(<<~JS)
+        (() => {
+          const reply = document.querySelector("#{reply}");
+          const other = document.querySelector("#post_1 nav.post-controls .post-action-menu__copy-link");
+          const box = (el) => {
+            const r = el.getBoundingClientRect();
+            return [Math.round(r.width), Math.round(r.height)];
+          };
+          return [getComputedStyle(reply).borderTopColor, box(reply), box(other)];
+        })()
+      JS
+      expect(border).to eq("rgba(0, 0, 0, 0)")
+      expect(size).to eq(neighbour)
+      expect_no_theme_errors
+    end
+  end
+
+  it "keeps the outline round a post's Reply on a computer" do
+    sign_in(admin)
+    visit(topic.relative_url)
+    reply = "#post_1 nav.post-controls .post-action-menu__reply"
+    expect(page).to have_css(reply)
+    expect(
+      page.evaluate_script("getComputedStyle(document.querySelector('#{reply}')).borderTopColor"),
+    ).not_to eq("rgba(0, 0, 0, 0)")
+    expect_no_theme_errors
+  end
+
   # A post's buttons stay on one line on a phone: what doesn't fit goes into
   # ⋯, which lists them, named, in a sheet; each does what it did on the line.
   it "keeps a post's buttons on one line on a phone, the rest in ⋯", mobile: true do
@@ -67,6 +103,51 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
       find(".jt-post-more .btn", text: I18n.t("js.post.controls.flag_action")).click
       expect(page).to have_css(".flag-modal")
       expect(page).to have_no_css(".jt-post-more")
+      expect_no_theme_errors
+    end
+  end
+
+  # Opening a topic on a phone laid the whole page out once a post, twice
+  # over: each post's menu read the screen's width as it rendered, and how
+  # many buttons fit was measured a post at a time, each post's menu
+  # rendered again before the next was read. Seconds on a slow phone. The
+  # width is kept from before, and one observer reads every post's line in
+  # one go.
+  it "opens a topic on a phone without laying the page out once a post", mobile: true do
+    SiteSetting.post_menu = "read|like|copyLink|share|flag|edit|bookmark|delete|admin|reply"
+    SiteSetting.post_menu_hidden_items = "delete|admin"
+    6.times { |i| Fabricate(:post, topic: topic, user: admin, raw: "More reply number #{i + 1}.") }
+    sign_in(admin)
+    resize_window(width: 320) do
+      visit("/latest")
+      expect(page).to have_css(".jt-card")
+      # counted from here, the topic opening inside the app
+      page.execute_script(<<~JS)
+        window.jtMenuObservers = new Set();
+        const Native = window.ResizeObserver;
+        window.ResizeObserver = class extends Native {
+          observe(target, options) {
+            if (target.matches("nav.post-controls")) window.jtMenuObservers.add(this);
+            return super.observe(target, options);
+          }
+        };
+        window.jtWidthReads = 0;
+        const width =
+          Object.getOwnPropertyDescriptor(window, "innerWidth") ||
+          Object.getOwnPropertyDescriptor(Window.prototype, "innerWidth");
+        Object.defineProperty(window, "innerWidth", {
+          configurable: true,
+          get() {
+            window.jtWidthReads++;
+            return width.get.call(window);
+          },
+        });
+        require("discourse/lib/url").default.routeTo("#{topic.relative_url}");
+      JS
+      # the posts' menus render together; core soon takes those off the screen away
+      expect(page).to have_css("nav.post-controls .jt-post-menu-room", visible: :all)
+      expect(page.evaluate_script("window.jtMenuObservers.size")).to eq(1)
+      expect(page.evaluate_script("window.jtWidthReads")).to be < topic.posts.count / 2
       expect_no_theme_errors
     end
   end
@@ -272,9 +353,12 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
     expect_no_theme_errors
   end
 
-  # Core gives a pressed row of a table list (suggested topics) nothing, and
-  # marks the row you came back to with a bar down one side of its first cell
+  # Core gives a pressed row of a table list (suggested topics with topic
+  # cards off) nothing, and marks the row you came back to with a bar down one
+  # side of its first cell
   it "sinks a pressed suggested topic's row, and tints a selected one all across" do
+    jtech_theme.update_setting(:topic_cards, false)
+    jtech_theme.save!
     sign_in(member)
     visit(topic.relative_url)
     row = ".more-topics__container .topic-list-item"
@@ -559,6 +643,8 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
   # Only the title opened a topic in a row list (New & Unread under a topic,
   # stock rows, compact density): the rest of the row did nothing
   it "opens a topic from anywhere on its row, not only its title" do
+    jtech_theme.update_setting(:topic_cards, false)
+    jtech_theme.save!
     sign_in(member)
     visit(topic.relative_url)
     row = find("#suggested-topics .topic-list-item", match: :first)
