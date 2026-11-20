@@ -13,12 +13,12 @@ module ::NautasTier
   end
 
   # The tier group's display name, or nil when the member holds none or the
-  # viewer may not see that group.
+  # viewer may not see that group or who is in it (naming the tier tells).
   def self.name_for(user, guardian)
     ids = group_ids
     held = GroupUser.where(user_id: user.id, group_id: ids).pluck(:group_id)
     group = Group.find_by(id: ids.reverse.find { |id| held.include?(id) })
-    return nil if group.nil? || !guardian.can_see_group?(group)
+    return nil if group.nil? || !guardian.can_see_group_and_members?(group)
 
     group.full_name.presence || group.name
   end

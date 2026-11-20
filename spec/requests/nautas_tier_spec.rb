@@ -22,6 +22,7 @@ RSpec.describe NautasTier do
   end
 
   it "names the highest tier group, preferring its full name" do
+    expect(NautasTier.name_for(member, Guardian.new(viewer))).to eq("Traders")
     expect(card_tier(member)).to eq("Traders")
 
     get "/u/#{member.username}.json"
@@ -34,6 +35,11 @@ RSpec.describe NautasTier do
 
   it "hides a tier group the viewer can't see" do
     high.update!(visibility_level: Group.visibility_levels[:owners])
+    expect(card_tier(member)).to be_nil
+  end
+
+  it "hides a tier group whose members the viewer can't see" do
+    high.update!(members_visibility_level: Group.visibility_levels[:owners])
     expect(card_tier(member)).to be_nil
   end
 

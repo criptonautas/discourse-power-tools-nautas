@@ -54,6 +54,8 @@ jtech:
   nautas_calendar_month_leaderboard_id:
     default: 0
     min: 0
+    # Leaderboard ids are bigint.
+    max: 9223372036854775807
     client: false
   # Power Tools Nautas: the tier groups, lowest first (lib/nautas/tier.rb).
   nautas_tier_groups:
