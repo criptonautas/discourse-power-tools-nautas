@@ -57,6 +57,7 @@ es:
       disteleplus_telegram: 'Disteleplus no pudo entregar a Telegram (%{at}): <code>%{description}</code> — %{hint}'
   site_settings:
     jtech_enabled: Interruptor general de Power Tools Nautas. Cada función tiene además su propio interruptor en su pestaña.
+    nautas_calendar_month_leaderboard_id: Id de un ranking de gamification que cuenta el mes calendario (UTC) en lugar de los últimos 30 días. Su fecha de inicio pasa al día 1 al empezar cada mes, así que su página, el bloque de la home y el karma de las tarjetas y perfiles se reinician juntos. Necesita Discourse Gamification. 0 lo desactiva; mientras esté puesto, se sobrescriben las fechas de inicio y fin del ranking.
     jtech_row_click_theme_ids: IDs de temas donde las filas de la lista de historias se abren desde cualquier punto de la fila (no solo el título y los números) y rebotan al tocarlas. Core solo lo hace en celulares. Vacío (por defecto) lo desactiva.
     jtech_theme_install: Instala y actualiza (en cada rebuild) el tema JTech que viene con el plugin. Nunca lo pone por defecto ni lo ofrece a la comunidad; eso se hace en Personalizar → Temas. Apagado, no instala ni actualiza; al encenderlo instala al momento y recupera un tema que un admin borró.
     jtech_app_icon: Usa el logo de JTech sobre un cuadrado negro como ícono de la app instalada, en lugar del ícono del manifiesto. Apagado, usa el ícono subido. Hay que reinstalar la app para ver el cambio.

@@ -49,6 +49,12 @@ jtech:
   jtech_badges_enabled:
     default: false
     client: false
+  # Power Tools Nautas: a gamification leaderboard (by id) kept on the
+  # calendar month (lib/nautas/calendar_month_karma.rb). 0 turns it off.
+  nautas_calendar_month_leaderboard_id:
+    default: 0
+    min: 0
+    client: false
 
 # ───────────────────────────────────────────────────────────────────────────
 # Jtech — Dislike (phantom reactions in restricted categories)

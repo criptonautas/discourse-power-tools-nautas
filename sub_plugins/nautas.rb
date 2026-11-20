@@ -3,6 +3,7 @@
 # kept in one file so upstream merges rarely touch it.
 
 require_relative "../lib/nautas/category_checklist"
+require_relative "../lib/nautas/calendar_month_karma"
 
 Discourse::Application.routes.append do
   scope "/nautas/category-checklist", module: "nautas", defaults: { format: :json } do
@@ -40,6 +41,14 @@ after_initialize do
       DiscourseJtechBadges::SWITCHES.each_key { |set| DiscourseJtechBadges.refresh!(set) }
     end
   end
+
+  # Cards and profiles (UserSerializer extends the card one) show this
+  # month's karma next to the tier.
+  add_to_serializer(
+    :user_card,
+    :nautas_monthly_karma,
+    include_condition: -> { NautasCalendarMonthKarma.enabled? },
+  ) { NautasCalendarMonthKarma.score_for(object, scope) }
 
   register_category_custom_field_type(NautasCategoryChecklist::FIELD, :json)
   register_user_custom_field_type(NautasCategoryChecklist::USER_FIELD, :json)
