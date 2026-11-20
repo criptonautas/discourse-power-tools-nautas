@@ -4,6 +4,7 @@
 
 require_relative "../lib/nautas/category_checklist"
 require_relative "../lib/nautas/calendar_month_karma"
+require_relative "../lib/nautas/tier"
 
 Discourse::Application.routes.append do
   scope "/nautas/category-checklist", module: "nautas", defaults: { format: :json } do
@@ -42,8 +43,11 @@ after_initialize do
     end
   end
 
-  # Cards and profiles (UserSerializer extends the card one) show this
-  # month's karma next to the tier.
+  # Cards and profiles (UserSerializer extends the card one) show the tier
+  # followed by this month's karma.
+  add_to_serializer(:user_card, :nautas_tier, include_condition: -> { NautasTier.enabled? }) do
+    NautasTier.name_for(object, scope)
+  end
   add_to_serializer(
     :user_card,
     :nautas_monthly_karma,
