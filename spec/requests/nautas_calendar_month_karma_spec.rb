@@ -3,7 +3,8 @@
 require "rails_helper"
 
 RSpec.describe NautasCalendarMonthKarma do
-  fab!(:member, :user)
+  # Has posted: core hides the profile (and card fields) of members who haven't.
+  fab!(:member) { Fabricate(:user).tap { |u| u.user_stat.update!(post_count: 1) } }
   fab!(:viewer, :user)
   fab!(:leaderboard, :gamification_leaderboard)
 

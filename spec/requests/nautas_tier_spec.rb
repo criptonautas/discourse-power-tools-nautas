@@ -3,7 +3,8 @@
 require "rails_helper"
 
 RSpec.describe NautasTier do
-  fab!(:member, :user)
+  # Has posted: core hides the profile (and card fields) of members who haven't.
+  fab!(:member) { Fabricate(:user).tap { |u| u.user_stat.update!(post_count: 1) } }
   fab!(:viewer, :user)
   fab!(:low) { Fabricate(:group, name: "nautas") }
   fab!(:high) { Fabricate(:group, name: "traders", full_name: "Traders") }
