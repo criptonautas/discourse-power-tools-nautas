@@ -8,13 +8,19 @@ require "rails_helper"
 # helpers below, which must honor the master too.
 RSpec.describe "Jtech master switch" do
   {
+    "DiscourseMarketAccounts" => :jtech_market_account_retention,
     "DiscourseMiniMod" => :mini_mod_enabled,
     "DiscourseModCategories" => :mod_categories_enabled,
+    "DiscourseModCategories::Whisper" => :mod_whisper_enabled,
     "DiscourseDisteleplus" => :disteleplus_enabled,
     "DiscourseDumbcourse" => :dumbcourse_enabled,
     "DiscourseReqpm" => :reqpm_enabled,
     "DiscourseListingFormat" => :listing_format_enabled,
     "DiscourseModElections" => :mod_elections_enabled,
+    "DiscourseFairScores" => :jtech_fair_scores,
+    "DiscourseJtechAds" => :jtech_ads_enabled,
+    "DiscourseReactionLevels" => :jtech_reaction_levels_enabled,
+    "DiscourseDiscordChat" => :discord_chat_enabled,
   }.each do |mod_name, setting|
     describe "#{mod_name}.enabled?" do
       let(:mod) { mod_name.constantize }

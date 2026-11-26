@@ -60,7 +60,11 @@ en:
       another_smtp_unconfigured: "Another SMTP is switched on but has no relay address, so forum email is still going out through the server's own mail host. Set <a href='%{base_path}/admin/plugins/jtech-tools/smtp'>the relay address</a> or switch Another SMTP off."
       disteleplus_telegram: "Disteleplus could not deliver to Telegram (%{at}): <code>%{description}</code> — %{hint}"
 
+  jtech_reaction_levels:
+    locked: "The :%{reaction}: reaction unlocks at trust level %{level}."
   site_settings:
+    jtech_market_account_retention: Protect accounts linked to Jtech Market from inactive-user deletion. Other inactive accounts still follow the forum cleanup policy. Requires Jtech Tools to be enabled.
+    jtech_market_origin: Exact HTTPS origin of Jtech Market. Only a signed sign-in to its marketplace callback marks a member as protected.
     # NOTE: core renders `site_settings.<name>` as the setting's DESCRIPTION;
     # the label is derived from the setting name and is not translatable.
     # There is no `<name>_description` key — core never reads one.
@@ -83,11 +87,148 @@ en:
       off to stop installs and updates; turning it on installs straight away and
       brings back a theme an admin deleted (which otherwise stays deleted).
 
+    jtech_topic_list_latest_reply: In the JTech theme's topic cards, show the
+      newest reply under the title (who wrote it and the start of it), instead
+      of the start of the first post. Each reader sees the newest reply they can
+      read, skipping whispers they aren't part of, hidden posts and people they ignore.
+      A topic with no replies still shows its first post.
+
     jtech_app_icon: Give the installed app (Install app / Add to Home screen)
       the JTech mark on a solid black square, so its taskbar and home-screen
       icon shows on light and dark backgrounds alike. It replaces the manifest
       icon site setting in the web manifest only; turn this off to use that
       upload instead. Reinstall the app to pick up a change.
+
+    discord_chat_enabled: Run the JTech Discord server's membership from the
+      forum. Members who linked Discord to their account (Preferences →
+      Account) get the member role and their forum username there; forum
+      staff get the staff roles; anyone unlinked, suspended, silenced or
+      deactivated loses them. Checked every minute. Nothing posted on the
+      forum is sent to Discord, except public topics the slash commands
+      (below) are asked for.
+
+    discord_chat_bot_token: Token of the Discord bot in the server (Developer
+      Portal → the app → Bot → Reset Token). In the server its role needs
+      Manage Roles and Manage Nicknames, and must sit above the roles below.
+
+    discord_chat_guild_id: ID of the Discord server (with Developer Mode on,
+      right click the server → Copy Server ID).
+
+    discord_chat_member_role_id: Discord role for every member with a linked,
+      active JTech account. Leave blank to manage no member role.
+
+    discord_chat_moderator_role_id: Discord role for forum moderators and
+      admins. Leave blank to manage none.
+
+    discord_chat_admin_role_id: Discord role for forum admins. Leave blank to
+      manage none.
+
+    discord_chat_min_trust_level: Lowest trust level that gets into the
+      Discord chat. A Discord sign-in makes a forum account in one click, so
+      raising this to 1 keeps out accounts made only to get in. Staff always
+      get in.
+
+    discord_chat_trust_level_roles: A Discord role for each trust level, as
+      "level:role ID" (for example 1:123456789). A member has the one for
+      their current trust level.
+
+    discord_chat_group_roles: A Discord role for members of a forum group,
+      as "group name:role ID". It follows the group's membership.
+
+    discord_chat_badge_roles: A Discord role for holders of a badge, as
+      "badge ID:role ID".
+
+    discord_chat_supporter_role_id: The Discord role the server shop's
+      thank-you product gives. Linked members who have it are added to the
+      forum group below.
+
+    discord_chat_supporter_group: Forum group that Discord supporters are
+      added to (and never removed from here). Give it a flair or title to
+      show on the forum.
+
+    discord_chat_sync_nicknames: Set each linked member's server nickname to
+      their forum username, so names match on both sides.
+
+    discord_chat_public_key: Public key of the Discord app (Developer Portal →
+      the app → General Information → Public Key). Discord signs every slash
+      command with it, and the forum refuses anything it can't verify. Set
+      the app's Interactions Endpoint URL to /discord-chat/interactions on
+      this forum.
+
+    discord_chat_commands_enabled: Answer the slash commands /search, /guide,
+      /rules, /whois and /leaderboard in the Discord server, and register
+      them there (uses the Discord login's client ID as the app). Answers
+      only ever show what a logged-out visitor can see; on a login-required
+      forum, /search, /guide, /whois and /leaderboard find nothing. Turning
+      this off removes the commands from the server.
+
+    discord_chat_mod_log_channel_id: ID of a moderators-only Discord channel
+      where the forum logs what it does in the server (who got in or lost
+      access, timeouts set and lifted, reports). Leave blank for no log. Make
+      sure only moderators can read it, since the bot posts whatever it is told to
+      log there.
+
+    discord_chat_sync_timeouts: Time a linked member out in the Discord server
+      while they're suspended or silenced on the forum, and lift it when that
+      ends. Discord's longest timeout is 28 days, so a longer suspension is
+      renewed as it runs. Only timeouts the forum set are ever lifted; a
+      moderator's own timeout in the server is left alone. The bot's role
+      needs the Timeout Members permission, and can't time out anyone with a
+      higher role. Kicks and bans in the server don't come back to the forum.
+
+    discord_chat_reports_enabled: Add "Report to moderators" to the Discord
+      server's message menu (right-click or long-press a message, then Apps).
+      A report goes to the moderators' log channel and, as a message, to the
+      forum's moderators group, with a link to the reported message and its
+      text quoted as plain text. The reporter gets a private "Sent" reply.
+      Each member can send 5 reports an hour. Needs the Interactions Endpoint
+      URL and public key set up as for the slash commands.
+
+    discord_chat_welcome_message: A direct message the bot sends each member
+      once, when the chat first opens for them (their account is linked and
+      allowed). {username} becomes their forum username. Leave blank to send
+      none. Only members who joined the server in the last 7 days are
+      welcomed, 10 a minute at most; anyone with direct messages closed is
+      skipped and not tried again.
+
+    discord_chat_starboard_channel_id: ID of the Discord channel that starred
+      messages are reposted to (make it read-only for members). Leave blank
+      to turn the starboard off. Needs the Message Content intent on the bot
+      (Developer Portal → Bot) so the reposts carry the text.
+
+    discord_chat_starboard_channels: IDs of the Discord channels the
+      starboard reads. Only these are ever looked at, so list public channels
+      only; a starred message in a channel left off the list is never
+      reposted.
+
+    discord_chat_starboard_threshold: How many ⭐ reactions a message needs to
+      be reposted to the starboard. Each message is reposted once; messages
+      older than 7 days are ignored.
+
+    discord_chat_linked_roles_enabled: Let members connect their forum account
+      from inside Discord (server menu → Linked Roles). They sign in here,
+      approve the app on Discord, and their accounts are connected as the
+      Discord login would; the sync then gives them the roles the forum
+      allows. Set the app's Linked Roles Verification URL to
+      /discord-chat/link on this forum, add /discord-chat/link/callback to its
+      OAuth2 redirects, and give a role with no permissions the "Linked to
+      JTech Forums" requirement under Links. Don't put that requirement on
+      the member role, or a suspended member could claim it back. Uses the
+      Discord login's client ID and secret.
+
+    jtech_lean_palettes: Send the colour palettes in every page with only the
+      colours their previews and swatches use (primary, secondary, tertiary,
+      selected, header background and header text) instead of all of them.
+      With many palettes that is most of a page's weight. Picking a palette
+      loads its full stylesheet as before, so nothing on screen changes; turn
+      this off to send every colour again.
+
+    jtech_lean_category_types: Send the categories in every page with each
+      of their types' id, name, title and icon only, not the full definition
+      (description and every field of its settings form). With many
+      categories that was over 100 KB of every page. The category editor
+      loads the category again with everything, so editing is unchanged;
+      turn this off to send the full definitions again.
 
     jtech_trust_level_flair: Show each member's trust level as their avatar
       flair when they haven't picked one, using the flair of their highest
@@ -110,6 +251,20 @@ en:
       modules (elections, REQ-PM, listings, Dumbcourse, pop-ups). They are
       created on every rebuild either way, switched off until this is on; each
       set also needs its module on.
+    jtech_fair_scores: Leaderboard points (discourse-gamification) count
+      taking part, not volume. Each day only the first replies a person
+      writes, a few likes from any one person, and the first likes a person
+      gives earn points; the limits are the three settings below. Points per
+      reply or like are still the plugin's own settings. Scores already
+      counted change at the plugin's next recalculation; recalculate from
+      Admin → Plugins → Gamification to apply it to past days.
+    jtech_fair_scores_replies_per_day: With fair scores on, how many replies
+      a day earn points for the person who wrote them.
+    jtech_fair_scores_likes_per_person_per_day: With fair scores on, how many
+      likes a day from any one person count toward the points of the person
+      they liked.
+    jtech_fair_scores_likes_given_per_day: With fair scores on, how many likes
+      a day earn points for the person who gave them.
 
     # ── Jtech — Dislike ────────────────────────────────────────────────────
     discourse_no_likes_enabled: Turn on phantom reactions. When off, likes and
@@ -994,6 +1149,48 @@ en:
       days.
 
     # ── Jtech — Listing format ─────────────────────────────────────────────
+    jtech_reaction_levels_enabled: Higher trust levels unlock more reaction
+      emojis. List the reactions to hold back under the trust level that
+      unlocks them (below); a reaction listed at a level is open at that
+      level and every level above. Reactions enabled in discourse-reactions
+      but listed at no level stay open to everyone, the main reaction (the
+      like) is always open, and staff have every reaction. The picker hides
+      what someone hasn't unlocked and the server refuses it; taking back a
+      reaction already given always works. Off by default.
+    jtech_reaction_levels_tl0: Reactions only for members at trust level 0
+      (new) and up. Usually left empty, since unlisted reactions are already
+      open to everyone.
+    jtech_reaction_levels_tl1: Reactions unlocked at trust level 1 (basic).
+    jtech_reaction_levels_tl2: Reactions unlocked at trust level 2 (member).
+    jtech_reaction_levels_tl3: Reactions unlocked at trust level 3 (regular).
+    jtech_reaction_levels_tl4: Reactions unlocked at trust level 4 (leader).
+    jtech_reaction_levels_staff: Reactions only staff can use. No trust level
+      unlocks them.
+    jtech_ads_enabled: Show ads in the welcome area at the top of the home
+      page (Latest, Categories and the homepage), on desktop and phones, like
+      a billboard. Ads are text and links only, fill a space of fixed size and
+      match the theme and palette. In the JTech theme the hero card becomes
+      the ad space; elsewhere it's a card in the same place. Each ad picks
+      who sees it. Admin → Plugins → Jtech Tools → Ads has every setting and
+      a preview. Off by default.
+    jtech_ads_rotate_seconds: With more than one ad for the same person, how
+      many seconds each stays before the next slides in, like a billboard.
+      Rotation pauses while the pointer or keyboard focus is on the ad, and
+      doesn't happen for people who ask for reduced motion.
+    jtech_ads_welcome_seconds: A new visitor (not logged in, first minute on
+      the site, see below) first sees the forum's own welcome for this many
+      seconds, then the ads slide in. 0 goes straight to the ads. Members
+      always go straight to the ads, and so does a theme without a welcome.
+    jtech_ads_new_visitor_seconds: For how many seconds after their first
+      page a logged-out visitor counts as new and gets the welcome first.
+      Remembered in their browser only; nothing is sent to the server. A
+      browser that doesn't keep it counts as not new.
+    jtech_ads_label: The small word shown before every ad so people know it's
+      one, such as "Ad" or "Sponsored".
+    jtech_ads_list: The ads. Add, edit, pause (Running) or schedule (Starts,
+      Ends) them here; changes reach visitors right away and logged-in
+      members on their next page load. Members can give each ad a thumbs up
+      or down; staff see the counts under the ad on the site.
     listing_format_enabled: Makes posts in the topics below follow a set
       format, for sale threads where every post is a listing. Replying opens
       a form with a box per field. A post that doesn't follow the format is

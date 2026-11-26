@@ -48,6 +48,12 @@ enabled_site_setting :jtech_enabled
   badge_thresholds
   jtech_badges
   nautas
+  market_accounts
+  fair_scores
+  ads
+  reaction_levels
+  lean_site_data
+  discord_chat
 ].each do |sub|
   path = File.expand_path("sub_plugins/#{sub}.rb", __dir__)
   instance_eval(File.read(path), path, 1)

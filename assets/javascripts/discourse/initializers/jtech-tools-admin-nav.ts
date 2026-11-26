@@ -78,6 +78,18 @@ const LINKS: AdminNavLink[] = [
     route: "adminPlugins.show.jtech-tools-mod-elections",
   },
   {
+    label: "jtech_tools.admin.tabs.market_accounts",
+    route: "adminPlugins.show.jtech-tools-market-accounts",
+  },
+  {
+    label: "jtech_tools.admin.tabs.ads",
+    route: "adminPlugins.show.jtech-tools-ads",
+  },
+  {
+    label: "jtech_tools.admin.tabs.reaction_levels",
+    route: "adminPlugins.show.jtech-tools-reaction-levels",
+  },
+  {
     label: "jtech_tools.admin.tabs.all_settings",
     route: "adminPlugins.show.settings",
   },

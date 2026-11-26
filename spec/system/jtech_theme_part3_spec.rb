@@ -579,11 +579,11 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
     end
   end
 
-  # Core's presence plugin lifts "… replying" 3.2em, onto the line the
-  # progress capsule used to rest on at the end of a topic. The capsule takes
-  # no line there any more, so the lift laid it over the topic map at the foot
-  # of the posts: its avatar on "12 views". (A stand-in for the bar, as one
-  # needs someone else replying.)
+  # "… replying" at the foot of a topic on a phone: under the topic map, not
+  # over it (core used to lift it onto the capsule's line, its avatar on
+  # "12 views"), and with nobody replying no empty band where it would be
+  # (core now keeps a row for it). (A stand-in for the bar, as one needs
+  # someone else replying.)
   it "puts \"replying\" under the topic map on a phone, not over it", mobile: true do
     12.times { |i| Fabricate(:post, topic: topic, raw: "Reply #{i}, with a few words in it.") }
     sign_in(admin)
@@ -1007,7 +1007,7 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
       sign_in(member)
       visit(lonely_topic.relative_url)
       expect(page).to have_css(".jt-first-reply", text: "No replies yet. Be the first.")
-      expect(page).to have_css("pre.jt-numbered .jt-lines", text: "1\n2\n3")
+      expect(page).to have_css("pre.jt-numbered .jt-code-gutter", text: "1\n2\n3")
       shot("first-reply")
       expect_no_theme_errors
     end
@@ -1046,11 +1046,11 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
       tall = Fabricate(:topic, category: category, user: admin)
       Fabricate(:post, topic: tall, user: admin, raw: raw)
       visit(tall.relative_url)
-      expect(page).to have_css("pre.jt-numbered .jt-lines")
+      expect(page).to have_css("pre.jt-numbered .jt-code-gutter")
       sizes = page.evaluate_async_script(<<~JS)
         const [pre] = document.getElementsByClassName("jt-numbered");
         const code = pre.querySelector(":scope > code");
-        const gutter = pre.querySelector(":scope > .jt-lines");
+        const gutter = pre.querySelector(":scope > .jt-code-gutter");
         code.scrollTop = code.scrollHeight;
         requestAnimationFrame(() => requestAnimationFrame(() => arguments[0]([
           code.clientHeight, gutter.offsetHeight, pre.offsetHeight, code.scrollTop, gutter.scrollTop,
@@ -1071,10 +1071,10 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
       SiteSetting.support_mixed_text_direction = true # as on the forum: code runs left to right
       SiteSetting.default_locale = "he"
       visit(lonely_topic.relative_url)
-      expect(page).to have_css("html.rtl pre.jt-numbered.codeblock-buttons .jt-lines")
+      expect(page).to have_css("html.rtl pre.jt-numbered.codeblock-buttons .jt-code-gutter")
       sides = page.evaluate_script(<<~JS)
         (() => {
-          const gutter = getComputedStyle(document.querySelector("pre.jt-numbered .jt-lines"));
+          const gutter = getComputedStyle(document.querySelector("pre.jt-numbered .jt-code-gutter"));
           const code = getComputedStyle(document.querySelector("pre.jt-numbered > code"));
           return [
             gutter.borderRightWidth,
@@ -1250,6 +1250,28 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
       visit(topic.relative_url)
       expect(page).to have_css("#post_1 .post-action-menu__copy-link")
       expect(page).to have_no_css(".post-action-menu__jt-print")
+    end
+
+    it "puts a brand's logo before a mention of its handle" do
+      Fabricate(:user, username: "claude")
+      post =
+        Fabricate(:post, topic: topic, user: member, raw: "Asked @claude, @groupme and @somebody.")
+      visit("#{topic.relative_url}/#{post.post_number}")
+      at = "#post_#{post.post_number} .cooked"
+      expect(page).to have_css("#{at} a.mention.jt-handle .jt-handle-logo[data-jt-handle='claude']")
+      expect(page).to have_css(
+        "#{at} span.mention.jt-handle .jt-handle-logo[data-jt-handle='groupme']",
+      )
+      expect(page).to have_css("#{at} .mention:not(.jt-handle)", text: "@somebody")
+      image = page.evaluate_script(<<~JS)
+        getComputedStyle(document.querySelector("#{at} .jt-handle-logo")).backgroundImage
+      JS
+      expect(image).to start_with("url(")
+      chip = page.evaluate_script(<<~JS)
+        getComputedStyle(document.querySelector("#{at} span.mention.jt-handle")).display
+      JS
+      expect(chip).to eq("inline-block")
+      expect_no_theme_errors
     end
 
     it "shows the listed badges after a poster's name" do

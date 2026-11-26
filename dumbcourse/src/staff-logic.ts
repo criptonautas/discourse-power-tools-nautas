@@ -264,13 +264,14 @@ export function claimOf(
 }
 
 // Core labels some actions just "Yes" and "No" (its buttons sit under a
-// question); a menu item needs to say what it does. Which one approves
-// depends on how core frames the question (with consistent review answers,
-// "No" approves), so the action itself decides, not its label.
+// question); a menu item needs to say what it does. Which answer approves
+// depends on how core puts the question: with review_queue_consistent_answers
+// "Yes" means there's a problem and approving is "No". So the action's id
+// says what it does, never the answer.
 export function actionLabel(a: ReviewAction): string {
   if (!/^(yes|no)$/i.test(a.label)) return a.label;
-  const name = a.server_action || a.id;
-  if (/^approve/.test(name)) return "Approve";
-  if (/^(reject|delete)/.test(name)) return "Reject";
+  const what = a.server_action || a.id;
+  if (/^approve/.test(what)) return "Approve";
+  if (/^(reject|discard|delete)/.test(what)) return "Reject";
   return a.label;
 }

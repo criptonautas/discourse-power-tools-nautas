@@ -529,10 +529,27 @@ html:not(.jt-vanilla) {
 }
 
 // ── Reactions as a row (reaction_rollout) ─────────────────
+// While the row is open, the menu's other buttons make room for it.
+@mixin rx-step-aside {
+  .post-controls:has(.discourse-reactions-picker.is-expanded, .jt-rx-ghost) {
+    .reactions-actions-summary,
+    .show-replies,
+    .actions
+      > :not(
+        .discourse-reactions-actions-button-shim,
+        .post-action-menu__jt-reaction-rollout,
+        .post-action-menu__reply
+      ) {
+      display: none;
+    }
+  }
+}
+
 // The picker leaves its box over the post and opens in the post's menu, a
-// row rolling out to the left of the heart: in the row of buttons, so the
-// space it takes pushes what's beside it along rather than covering it. It
-// takes the room there is in whole reactions and scrolls the rest.
+// row rolling out to the left of the heart. Under a mouse it opens over the
+// buttons beside it; on touch it takes its place in the row and the others
+// step aside. It takes the room there is in whole reactions and scrolls the
+// rest.
 // api-initializers/jt-reaction-rollout slides it open to that width and
 // shut again (a copy, .jt-rx-ghost, since the plugin removes the row the
 // moment it closes) and glides the wheel; nothing runs while it sits. Not
@@ -682,30 +699,70 @@ html.jt-reaction-rollout:not(.jt-vanilla) {
     }
   }
 
-  // Phones: while the row is open everything else in the menu steps aside
-  // but the heart, the button that opened it and Reply, so it gets the
-  // menu's width. They're back when it shuts.
+  // Phones and touch screens: while the row is open everything else in the
+  // menu steps aside but the heart, the button that opened it and Reply, so
+  // it gets the menu's width. They're back when it shuts. A touch screen in
+  // the desktop layout (a tablet, an unfolded phone) has every button on
+  // the line, which left the row one reaction wide. A laptop's touchscreen
+  // counts while it's the one in use (.jt-touch-input, set by
+  // jt-reaction-rollout); under its mouse the row slides out as on any
+  // desktop, without moving the heart away from the pointer.
   @include viewport.until(sm) {
-    .post-controls:has(.discourse-reactions-picker.is-expanded, .jt-rx-ghost) {
-      .reactions-actions-summary,
-      .show-replies,
-      .actions
-        > :not(
-          .discourse-reactions-actions-button-shim,
-          .post-action-menu__jt-reaction-rollout,
-          .post-action-menu__reply
-        ) {
-        display: none;
+    @include rx-step-aside;
+  }
+
+  @media (hover: none) {
+    @include rx-step-aside;
+  }
+
+  &.jt-touch-input {
+    @include rx-step-aside;
+  }
+
+  // Under a mouse the row opens over the buttons to its left instead of
+  // pushing them along, so translate and the rest stay where the pointer
+  // left them. Its background is solid there, the fill on top of the page
+  // colour, so nothing shows through. Touch keeps the row in the line, with
+  // the other buttons stepping aside (above).
+  @include viewport.from(sm) {
+    @media (hover: hover) {
+      &:not(.jt-touch-input) {
+        .post-controls .discourse-reactions-actions {
+          position: relative;
+        }
+
+        // the plugin places its picker with inline top and left; the row
+        // goes by the heart instead
+        .post-controls .discourse-reactions-picker {
+          position: absolute;
+          top: 50% !important;
+          right: 100%;
+          bottom: auto;
+          left: auto !important;
+          z-index: z("timeline");
+          max-width: min(
+            calc(
+              var(--jt-rx-count, 7) * var(--jt-rx-cell) + 2 *
+                var(--jt-rx-inset) + 2px
+            ),
+            60vw
+          );
+          background:
+            linear-gradient(var(--jt-fill), var(--jt-fill)), var(--secondary);
+          transform: translateY(-50%);
+        }
       }
     }
   }
 }
 
 // The button that opens the row, for screens without a pointer to rest on
-// the heart, and only with the row.
+// the heart (or a laptop's touchscreen in use), and only with the row.
 .post-action-menu__jt-reaction-rollout {
   @media (hover: hover) {
-    display: none !important;
+    html:not(.jt-touch-input) & {
+      display: none !important;
+    }
   }
 
   html.jt-vanilla & {
