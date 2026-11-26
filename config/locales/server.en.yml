@@ -71,6 +71,15 @@ en:
     jtech_enabled: Master gate for the whole Power Tools Nautas plugin bundle. Every
       sub-plugin also has its own enable switch on its tab for fine-grained
       control.
+    nautas_calendar_month_leaderboard_id: Id of a gamification leaderboard that
+      counts the calendar month (UTC) instead of a rolling month. Its start date
+      moves to the 1st when each month begins, so its page, home block and the
+      karma on user cards and profiles all reset together. Needs Discourse
+      Gamification. 0 turns it off; the leaderboard's own start and end dates
+      are overwritten while it is set.
+    nautas_tier_groups: The tier groups, lowest tier first. User cards and
+      profiles name the highest one each member is in (field nautas_tier),
+      to viewers who can see that group. Empty turns it off.
 
     jtech_row_click_theme_ids: Theme ids whose topic list rows open the topic
       from anywhere on the row (not just the title and the numbers) and bounce
