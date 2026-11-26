@@ -75,8 +75,7 @@ RSpec.describe "Gallery expansion" do
       sign_in(moderator)
     end
 
-    it "lists categories on the categories page as a moderator",
-       skip: "Breaks on current core; unused on our forum" do
+    it "lists categories on the categories page as a moderator" do
       Fabricate(:category, name: "Releases")
       Fabricate(:category, name: "Bug Reports")
       visit("/categories")
@@ -84,8 +83,7 @@ RSpec.describe "Gallery expansion" do
       shot("104_moderator_categories_list")
     end
 
-    it "shows the categories page chrome for a moderator",
-       skip: "Breaks on current core; unused on our forum" do
+    it "shows the categories page chrome for a moderator" do
       visit("/categories")
       expect(page).to have_css(".category-list", wait: 10)
       shot("105_moderator_categories_page_chrome")

@@ -584,9 +584,7 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
   # no line there any more, so the lift laid it over the topic map at the foot
   # of the posts: its avatar on "12 views". (A stand-in for the bar, as one
   # needs someone else replying.)
-  it "puts \"replying\" under the topic map on a phone, not over it",
-     mobile: true,
-     skip: "Breaks on current core; unused on our forum" do
+  it "puts \"replying\" under the topic map on a phone, not over it", mobile: true do
     12.times { |i| Fabricate(:post, topic: topic, raw: "Reply #{i}, with a few words in it.") }
     sign_in(admin)
     resize_window(width: 390, height: 844) do
