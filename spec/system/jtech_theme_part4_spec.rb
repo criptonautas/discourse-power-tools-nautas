@@ -437,6 +437,27 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
       expect_no_theme_errors
     end
 
+    # The app on an iPad puts core's back/forward bar across the top. The
+    # browser here isn't iPadOS, so the spec sets the class core adds there.
+    it "starts the slide-in menu below the iPad app's top bar" do
+      sign_in(member)
+      page.driver.with_playwright_page { |pw| pw.set_viewport_size(width: 744, height: 1100) }
+      visit("/latest")
+      page.execute_script("document.documentElement.classList.add('footer-nav-ipad')")
+      find(".d-header .btn-sidebar-toggle").click
+      expect(page).to have_css(".hamburger-panel .menu-panel.slide-in .sidebar-section-link")
+      bar, first_link = page.evaluate_script(<<~JS)
+        [
+          parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--footer-nav-height")),
+          document.querySelector(".menu-panel.slide-in .sidebar-section-link").getBoundingClientRect().top,
+        ]
+      JS
+      expect(first_link).to be >= bar
+      expect_no_theme_errors
+    ensure
+      page.driver.with_playwright_page { |pw| pw.set_viewport_size(width: 1400, height: 1400) }
+    end
+
     # Core lines the timeline up on the left of its column, so it stopped
     # about 100px short of the edge the header, title and suggested list share
     it "ends the timeline and its buttons at the page's right edge" do
@@ -1177,6 +1198,22 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
       expect_no_theme_errors
     end
 
+    it "opens over the buttons beside it with a mouse, so none of them move" do
+      open_reply
+      positions = <<~JS
+        Array.from(
+          document.querySelectorAll(
+            "#{post_selector} nav.post-controls .actions > :not(.discourse-reactions-actions-button-shim)",
+          ),
+        ).map((el) => Math.round(el.getBoundingClientRect().left))
+      JS
+      before = page.evaluate_script(positions)
+      expect(before.size).to be > 1
+      find("#{post_selector} .discourse-reactions-reaction-button").hover
+      expect(page).to have_css(open_row)
+      expect(page.evaluate_script(positions)).to eq(before)
+    end
+
     it "scrolls a row that doesn't fit with the mouse wheel" do
       SiteSetting.discourse_reactions_enabled_reactions +=
         "|grinning|smiley|smile|grin|joy|wink|blush|innocent|heart_eyes|star_struck|sunglasses|nerd_face"
@@ -1230,6 +1267,70 @@ RSpec.describe "JTech theme", if: ENV["JTECH_THEME_SPECS"].present? do
       find(button).click
       expect(page).to have_no_css(open_row)
       expect(page).to have_css("#{post_selector} .post-action-menu__copy-link")
+      expect_no_theme_errors
+    end
+
+    # A tablet or an unfolded phone: a touch screen in the desktop layout.
+    # Every button stayed on the line beside the row, which was left one
+    # reaction wide.
+    it "makes room for the row on a touch screen in the desktop layout" do
+      touch = ->(on) do
+        page.driver.with_playwright_page do |pw|
+          pw
+            .context
+            .new_cdp_session(pw)
+            .send_message(
+              "Emulation.setTouchEmulationEnabled",
+              params: on ? { enabled: true, maxTouchPoints: 5 } : { enabled: false },
+            )
+        end
+      end
+      touch.call(true)
+      resize_window(width: 1000, height: 900) do
+        open_reply
+        expect(page).to have_css("html.desktop-view")
+        find("#{post_selector} .post-action-menu__jt-reaction-rollout").click
+        expect(page).to have_css(open_row)
+        expect(page).to have_no_css("#{post_selector} .post-action-menu__copy-link")
+        expect(page).to have_css("#{post_selector} .post-action-menu__reply")
+        # several reactions across, not the one it had (a cell is 2rem)
+        row = box("#{open_row} .discourse-reactions-picker-container")
+        expect(row["right"] - row["left"]).to be > 3 * 32
+      end
+      expect_no_theme_errors
+    ensure
+      touch&.call(false)
+    end
+
+    # A laptop with a touchscreen: its mouse is the main pointer, so the
+    # media queries see no touch screen. What the last press was made with
+    # decides.
+    it "makes room for the row while a laptop's touchscreen is in use" do
+      press_with = ->(type) do
+        page.execute_script(
+          "document.body.dispatchEvent(new PointerEvent('pointerdown', " \
+            "{ pointerType: #{type.to_json}, bubbles: true }))",
+        )
+      end
+      button = "#{post_selector} .post-action-menu__jt-reaction-rollout"
+      resize_window(width: 1000, height: 900) do
+        open_reply
+        expect(page).to have_css("html.desktop-view")
+        expect(page).to have_no_css(button)
+
+        press_with.call("touch")
+        expect(page).to have_css(button)
+        # a script's click: a real one is the mouse's, and the mouse hides it
+        page.execute_script("document.querySelector(#{button.to_json}).click()")
+        expect(page).to have_css(open_row)
+        expect(page).to have_no_css("#{post_selector} .post-action-menu__copy-link")
+        expect(page).to have_css("#{post_selector} .post-action-menu__reply")
+        row = box("#{open_row} .discourse-reactions-picker-container")
+        expect(row["right"] - row["left"]).to be > 3 * 32
+
+        press_with.call("mouse")
+        expect(page).to have_no_css(button)
+      end
       expect_no_theme_errors
     end
 

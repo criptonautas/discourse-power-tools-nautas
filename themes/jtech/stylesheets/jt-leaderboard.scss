@@ -1,6 +1,12 @@
 // discourse-gamification leaderboard: monochrome podium. Rank is carried by
 // fill (1st inverted) and border weight, not gold/silver/bronze.
 html .leaderboard {
+  // The sticky Rank / Cheers header stays above the rows scrolling under
+  // it; letter avatars made their own layer and showed over it.
+  .ranking-col-names {
+    z-index: 1;
+  }
+
   .podium__wrapper {
     background: var(--jt-surface-raised);
     border: 1px solid var(--jt-border);
@@ -31,7 +37,15 @@ html .leaderboard {
       border-radius: var(--jt-radius-md);
     }
 
+    // one short line: a long name ends in "…" after about 8 characters
+    // instead of breaking at its hyphens or running the avatar's width
     &__name {
+      display: block;
+      max-width: 8ch;
+      margin-inline: auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: var(--jt-text-muted);
     }
 
@@ -108,6 +122,19 @@ html .leaderboard {
 
     .user__score {
       font-variant-numeric: tabular-nums;
+    }
+  }
+
+  // With the period picker turned off (the leaderboard's "period filter
+  // disabled"), the plugin still draws its arrow, so it looked like a menu that
+  // wouldn't open. It's a plain heading then.
+  .leaderboard__period-chooser.is-disabled {
+    .angle-icon {
+      display: none;
+    }
+
+    .select-kit-header {
+      cursor: default;
     }
   }
 }

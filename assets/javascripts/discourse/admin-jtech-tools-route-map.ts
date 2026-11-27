@@ -24,5 +24,8 @@ export default {
     this.route("jtech-tools-reqpm", { path: "reqpm" });
     this.route("jtech-tools-listing-format", { path: "listing-format" });
     this.route("jtech-tools-mod-elections", { path: "mod-elections" });
+    this.route("jtech-tools-market-accounts", { path: "market-accounts" });
+    this.route("jtech-tools-ads", { path: "ads" });
+    this.route("jtech-tools-reaction-levels", { path: "reaction-levels" });
   },
 };
