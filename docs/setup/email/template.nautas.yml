@@ -1,6 +1,6 @@
 # Criptonautas version of template.yml: Horizon's accent (#5814EA light,
 # #C89DFF dark) and the forum's app icon. Paste the value of `html` in the HTML
-# tab, email.scss as is in the CSS tab, and set email_accent_bg_color #5814EA,
+# tab, email.nautas.scss in the CSS tab, and set email_accent_bg_color #5814EA,
 # email_accent_fg_color #FFFFFF, email_link_color #5814EA.
 html: |
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
