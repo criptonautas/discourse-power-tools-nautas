@@ -10,6 +10,7 @@ html: |
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       %{dark_mode_meta_tags}
       <meta name="x-apple-disable-message-reformatting" />
+      <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600&family=Lato:wght@400;700&display=swap" rel="stylesheet" type="text/css" />
       <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
       <title></title>
       <!-- Criptonautas (Horizon accent). Colours live here, not in the custom CSS: Discourse
@@ -79,7 +80,7 @@ html: |
             <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center"><tr><td><![endif]-->
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
               <tr>
-                <td class="jt-head" style="padding: 0 4px 16px; font-family: Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: #000000;">
+                <td class="jt-head" style="padding: 0 4px 16px; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: #000000;">
                   <a href="/latest" style="color: #000000; text-decoration: none; font-weight: 600;">
                     <img src="https://cdn-comunidad.criptonautas.co/uploads/default/optimized/2X/c/c890c5c649451aff842db93edafda4a97df044af_2_180x180.png" width="28" height="28" alt="" style="width: 28px; height: 28px; border: 0; border-radius: 7px; vertical-align: middle; display: inline-block;" />
                     <span style="vertical-align: middle; padding-left: 8px; color: #000000;">Comunidad Criptonautas</span>
@@ -87,12 +88,12 @@ html: |
                 </td>
               </tr>
               <tr>
-                <td class="jt-card" bgcolor="#ffffff" style="background-color: #ffffff; border: 1px solid #ebebeb; border-radius: 16px; padding: 28px 28px; color: #000000; font-family: Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; letter-spacing: -0.006em; text-align: left;">
+                <td class="jt-card" bgcolor="#ffffff" style="background-color: #ffffff; border: 1px solid #ebebeb; border-radius: 16px; padding: 28px 28px; color: #000000; font-family: Lato, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; text-align: left;">
                   %{email_content}
                 </td>
               </tr>
               <tr>
-                <td class="jt-foot" style="padding: 20px 4px 0; font-family: Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; line-height: 1.5; color: #737373;">
+                <td class="jt-foot" style="padding: 20px 4px 0; font-family: Lato, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; line-height: 1.5; color: #737373;">
                   <a href="/latest" style="color: #737373; text-decoration: none; font-weight: normal;">Comunidad Criptonautas</a>
                   &nbsp;&middot;&nbsp;
                   <a href="/my/preferences/emails" style="color: #737373; text-decoration: underline; font-weight: normal;">Preferencias de correo</a>

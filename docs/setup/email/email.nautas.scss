@@ -8,8 +8,10 @@
 // and from email_accent_bg_color / email_accent_fg_color / email_link_color.
 // @media rules don't work here either (they get inlined unconditionally).
 
-$sans: Geist, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-$mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+// Horizon's fonts on Criptonautas; clients without web fonts (Gmail, Outlook) get the fallbacks
+$sans: Lato, "Helvetica Neue", Arial, sans-serif;
+$heading: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+$mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
 // Post header: avatar, name, date
 .user-avatar {
@@ -184,4 +186,14 @@ div:has(> table.spacer),
 table:has(> tbody > tr > td.digest-popular-topic-wrapper) {
   background: none !important;
   background-color: unquote("transparent") !important;
+}
+
+// Headings in Inter Tight, as on the forum
+h1,
+h2,
+h3,
+.digest-topic-title,
+.header-popular-posts,
+.digest-new-header {
+  font-family: $heading !important;
 }
