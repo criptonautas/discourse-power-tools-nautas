@@ -10,7 +10,6 @@ html: |
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       %{dark_mode_meta_tags}
       <meta name="x-apple-disable-message-reformatting" />
-      <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600&family=Lato:wght@400;700&display=swap" rel="stylesheet" type="text/css" />
       <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
       <title></title>
       <!-- Criptonautas (Horizon accent). Colours live here, not in the custom CSS: Discourse

@@ -8,7 +8,7 @@
 // and from email_accent_bg_color / email_accent_fg_color / email_link_color.
 // @media rules don't work here either (they get inlined unconditionally).
 
-// Horizon's fonts on Criptonautas; clients without web fonts (Gmail, Outlook) get the fallbacks
+// Horizon's fonts when installed on the reader's system, else the fallbacks; no web font requests
 $sans: Lato, "Helvetica Neue", Arial, sans-serif;
 $heading: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
 $mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
